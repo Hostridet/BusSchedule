@@ -56,7 +56,7 @@ class _BusPageState extends State<BusPage> {
         ),
         gradient: const LinearGradient(colors: [Color(0xff141414), Color(0xff1e1e1e), Color(0xff282828)]),
       ),
-      body: ,
+      body: Text("2323"),
     );
   }
 }

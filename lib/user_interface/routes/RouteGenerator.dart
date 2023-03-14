@@ -1,29 +1,15 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:front/user_interface/pages/DirectionPage.dart';
-import 'package:front/user_interface/pages/SubjectPage.dart';
+import 'package:front/user_interface/pages/BusTypePage.dart';
 
-import '../pages/StudentPage.dart';
 
 class RouteGenerator {
   Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
     switch(settings.name) {
-      case '/students':
+      case '/bustype':
         return CustomPageRoute(
-          builder: (context) => const StudentPage(),
-          settings: settings,
-        );
-      case '/subject':
-        return CustomPageRoute(
-          builder: (context) => const SubjectPage(),
-          settings: settings,
-        );
-      case '/direction':
-        return CustomPageRoute(
-          builder: (context) => const DirectionPage(),
+          builder: (context) => const BusTypePage(),
           settings: settings,
         );
       default:

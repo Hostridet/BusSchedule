@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:front/user_interface/pages/DirectionPage.dart';
-import 'package:front/user_interface/pages/StudentPage.dart';
-import 'package:front/user_interface/pages/SubjectPage.dart';
 
 import '../user_interface/routes/RouteGenerator.dart';
 
@@ -27,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: "/students",
+      initialRoute: "/bustype",
       // routes: {
       //   '/students': (context) => StudentPage(),
       //   '/subject': (context) => SubjectPage(),

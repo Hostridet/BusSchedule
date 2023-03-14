@@ -22,9 +22,7 @@ class Direction {
   factory Direction.fromJson(Map<String, dynamic> json) {
     List<Require> resultList = [];
     if (json['require'] != []) {
-      for (dynamic item in json['require']) {
-        resultList.add(Require(subject: Subject(id: item['subject_id'], name: item['name']), minPoint: item['min_point']));
-      }
+
     }
     List<ReceivedStudent> receivedStudents = [];
     if (json['students'] != []) {
