@@ -1,21 +1,41 @@
-import 'package:front/data/database/database.dart';
-import 'package:front/data/entity/BusType.dart';
+import 'package:front/models/BusType.dart';
 
 class BusTypeRepository {
-  Future<void> insertBusType(BusType busType) async {
-    final database = await $FloorAppDataBase
-        .databaseBuilder('flutter_database.db')
-        .build();
-    final dao = database.busTypeDao;
-    dao.insertBusType(busType);
+  Future<void> delete(BusType busType) async {
+    return busType.delete();
   }
 
   Future<List<BusType>> getAllBusType() async {
-    final database = await $FloorAppDataBase
-        .databaseBuilder('flutter_database.db')
-        .build();
-    final dao = database.busTypeDao;
-    List<BusType> listBus = dao.getAllBus() as List<BusType>;
-    return listBus;
+    bool flag = false;
+    List<BusType> busTypeList = [];
+    int index = 0;
+    while (flag != true) {
+      BusType curBus = await BusType.getSoilById(index);
+      if (curBus.type == "null") {
+        flag = true;
+      }
+      else {
+        if (curBus.id != -1) {
+          busTypeList.add(curBus);
+        }
+        index++;
+      }
+    }
+    return busTypeList;
+  }
+
+  Future<int> getCount() async {
+    int index = 0;
+    bool flag = false;
+    while(flag == false) {
+      BusType curSoil = await BusType.getSoilById(index);
+      if (curSoil.type == "null") {
+        flag = true;
+      }
+      else {
+        index++;
+      }
+    }
+    return index;
   }
 }

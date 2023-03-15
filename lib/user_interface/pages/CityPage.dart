@@ -1,15 +1,16 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 
-class BusPage extends StatefulWidget {
-  const BusPage({Key? key}) : super(key: key);
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class CityPage extends StatefulWidget {
+  const CityPage({Key? key}) : super(key: key);
 
   @override
-  State<BusPage> createState() => _BusPageState();
+  State<CityPage> createState() => _CityPageState();
 }
 
-class _BusPageState extends State<BusPage> {
+class _CityPageState extends State<CityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +39,7 @@ class _BusPageState extends State<BusPage> {
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(context, "/bus", ModalRoute.withName('/'));
                 },
-                child: Text("Автобусы", style: TextStyle(color: Colors.white70)),
+                child: Text("Автобусы", style: TextStyle(color: Colors.white)),
               ),
             ),
             SizedBox(width: 10),
@@ -49,7 +50,7 @@ class _BusPageState extends State<BusPage> {
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(context, "/city", ModalRoute.withName('/'));
                 },
-                child: Text("Города", style: TextStyle(color: Colors.white)),
+                child: Text("Города", style: TextStyle(color: Colors.white70)),
               ),
             ),
           ],

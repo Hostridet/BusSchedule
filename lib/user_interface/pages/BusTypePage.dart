@@ -50,7 +50,7 @@ class _BusTypePageState extends State<BusTypePage> {
               elevation: 1,
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context, "/cities", ModalRoute.withName('/'));
+                  Navigator.pushNamedAndRemoveUntil(context, "/city", ModalRoute.withName('/'));
                 },
                 child: Text("Города", style: TextStyle(color: Colors.white)),
               ),
@@ -70,19 +70,41 @@ class _BusTypePageState extends State<BusTypePage> {
               if (state is BusTypeLoadedState) {
                 if (state.listBusType.isNotEmpty)
                   {
-                    return ListView.builder(
-                        itemCount: state.listBusType.length,
-                        shrinkWrap: true,
-                        padding: EdgeInsets.all(10),
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text(state.listBusType[index].type),
-                          );
-                        }
+                    return Column(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              BlocProvider.of<BusTypeBloc>(context)
+                                  .add(BusTypeAddEvent(state.listBusType.length,"Добавил", 150));
+                            },
+                            child: Text("Добавить")
+                        ),
+                        ListView.builder(
+                            itemCount: state.listBusType.length,
+                            shrinkWrap: true,
+                            padding: EdgeInsets.all(10),
+                            itemBuilder: (BuildContext context, int index) {
+                              return ListTile(
+                                title: Text(state.listBusType[index].type),
+                              );
+                            }
+                        ),
+                      ],
                     );
                   }
                 else {
-                  return Text("Типы автобусов отсутствуют");
+                  return Column(
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            BlocProvider.of<BusTypeBloc>(context)
+                                .add(BusTypeAddEvent(state.listBusType.length, "Добавил", 150));
+                          },
+                          child: Text("Добавить")
+                      ),
+                      Center(child: Text("Типы автобусов отсутствуют")),
+                    ],
+                  );
                 }
 
               }

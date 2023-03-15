@@ -31,8 +31,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  floor: ^1.4.1
-  sqflite: ^2.2.5
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -46,8 +44,7 @@ dev_dependencies:
   flutter_bloc: ^8.1.1
   http: ^0.13.5
   dropdown_search: ^3.0.1
-  floor_generator: ^1.4.1
-  build_runner: ^2.1.2
+  shared_preferences: ^2.0.18
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
