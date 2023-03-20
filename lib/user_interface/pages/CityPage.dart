@@ -1,7 +1,10 @@
+import 'package:front/bloc/city_bloc/city_bloc.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../repository/CityRepository.dart';
 
 class CityPage extends StatefulWidget {
   const CityPage({Key? key}) : super(key: key);
@@ -11,6 +14,7 @@ class CityPage extends StatefulWidget {
 }
 
 class _CityPageState extends State<CityPage> {
+  TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +61,109 @@ class _CityPageState extends State<CityPage> {
         ),
         gradient: const LinearGradient(colors: [Color(0xff141414), Color(0xff1e1e1e), Color(0xff282828)]),
       ),
-      body: Text("2323"),
+      body: RepositoryProvider(
+        create: (context) => CityRepository(),
+        child: BlocProvider<CityBloc>(
+          create: (context) => CityBloc(
+            RepositoryProvider.of<CityRepository>(context),
+          )..add(GetCityEvent()),
+          child: BlocBuilder<CityBloc, CityState>(
+            builder: (context, state) {
+              if (state is CityLoadedState) {
+                if (state.cityList.isEmpty) {
+                  return Column(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            height: 200,
+                            width: 200,
+                            child: TextField(
+                              controller: nameController,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Введите название города',
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                BlocProvider.of<CityBloc>(context)
+                                    .add(AddCityEvent(state.cityList.length, nameController.text));
+                                nameController.clear();
+                              },
+                              child: Text("Добавить")
+                          ),
+                        ],
+                      ),
+                      Center(child: Text("Список городов пуст")),
+                    ],
+                  );
+                }
+                else {
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: 200,
+                            child: TextField(
+                              controller: nameController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                labelText: 'Введите название города',
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                BlocProvider.of<CityBloc>(context)
+                                    .add(AddCityEvent(state.cityList.length, nameController.text));
+                                nameController.clear();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.orange,
+                              ),
+                              child: Text("Добавить")
+                          ),
+                        ],
+                      ),
+                      Divider(),
+                      ListView.builder(
+                          itemCount: state.cityList.length,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.all(10),
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 1,
+                              child: ListTile(
+                                title: Text(state.cityList[index].name),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    BlocProvider.of<CityBloc>(context)
+                                        .add(DeleteCityEvent(state.cityList[index]));
+                                  },
+                                ),
+                              ),
+                            );
+                          }
+                      ),
+                    ],
+                  );
+                }
+              }
+              if (state is CityErrorState) {
+                return Center(
+                  child: Text(state.error),
+                );
+              }
+              return Container();
+            },
+          ),
+        ),
+      ),
     );
   }
 }
