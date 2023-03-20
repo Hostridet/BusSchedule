@@ -15,7 +15,7 @@ class BusTypeBloc extends Bloc<BusTypeEvent, BusTypeState> {
   BusTypeBloc(this._busTypeRepository) : super(BusTypeInitial()) {
     on<BusTypeGetEvent>((event, emit) async {
       try {
-        List<BusType> listBusType = await _busTypeRepository.getAllBusType();
+        List<BusType> listBusType = (await _busTypeRepository.getAllBusType()).cast<BusType>();
         emit(BusTypeLoadedState(listBusType));
       }
       catch(e) {

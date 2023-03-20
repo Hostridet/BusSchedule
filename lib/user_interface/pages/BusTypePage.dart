@@ -13,10 +13,14 @@ class BusTypePage extends StatefulWidget {
 }
 
 class _BusTypePageState extends State<BusTypePage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController rangeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: NewGradientAppBar(
+        automaticallyImplyLeading: false,
         title: Row(
           children: [
             Icon(Icons.departure_board, color: Colors.orange,),
@@ -72,10 +76,42 @@ class _BusTypePageState extends State<BusTypePage> {
                   {
                     return Column(
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              width: 500,
+                              height: 100,
+                              child: TextField(
+                                controller: nameController,
+                                decoration: const InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  labelText: 'Название типа автобуса',
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              width: 500,
+                              height: 100,
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                controller: rangeController,
+                                decoration: const InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  labelText: 'Расстояние',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                         ElevatedButton(
                             onPressed: () {
                               BlocProvider.of<BusTypeBloc>(context)
-                                  .add(BusTypeAddEvent(state.listBusType.length,"Добавил", 150));
+                                  .add(BusTypeAddEvent(state.listBusType.length, nameController.text, int.parse(rangeController.text)));
+                              nameController.clear();
+                              rangeController.clear();
                             },
                             child: Text("Добавить")
                         ),
@@ -84,8 +120,12 @@ class _BusTypePageState extends State<BusTypePage> {
                             shrinkWrap: true,
                             padding: EdgeInsets.all(10),
                             itemBuilder: (BuildContext context, int index) {
-                              return ListTile(
-                                title: Text(state.listBusType[index].type),
+                              return Card(
+                                elevation: 1,
+                                child: ListTile(
+                                  title: Text(state.listBusType[index].type),
+                                  subtitle: Text("Расстояние: ${state.listBusType[index].range}"),
+                                ),
                               );
                             }
                         ),
@@ -95,10 +135,42 @@ class _BusTypePageState extends State<BusTypePage> {
                 else {
                   return Column(
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            width: 500,
+                            height: 100,
+                            child: TextField(
+                              controller: nameController,
+                              decoration: const InputDecoration(
+                                border: UnderlineInputBorder(),
+                                labelText: 'Название типа автобуса',
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            width: 500,
+                            height: 100,
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              controller: rangeController,
+                              decoration: const InputDecoration(
+                                border: UnderlineInputBorder(),
+                                labelText: 'Расстояние',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       ElevatedButton(
                           onPressed: () {
                             BlocProvider.of<BusTypeBloc>(context)
-                                .add(BusTypeAddEvent(state.listBusType.length, "Добавил", 150));
+                                .add(BusTypeAddEvent(state.listBusType.length, nameController.text, int.parse(rangeController.text)));
+                            nameController.clear();
+                            rangeController.clear();
                           },
                           child: Text("Добавить")
                       ),
