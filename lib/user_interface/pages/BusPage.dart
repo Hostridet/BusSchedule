@@ -1,6 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../bloc/bus_bloc/bus_bloc.dart';
+import '../../models/BusType.dart';
+import '../../repository/BusRepository.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class BusPage extends StatefulWidget {
   const BusPage({Key? key}) : super(key: key);
@@ -10,8 +16,10 @@ class BusPage extends StatefulWidget {
 }
 
 class _BusPageState extends State<BusPage> {
+  TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    BusType curBusType;
     return Scaffold(
       appBar: NewGradientAppBar(
         title: Row(
@@ -56,7 +64,88 @@ class _BusPageState extends State<BusPage> {
         ),
         gradient: const LinearGradient(colors: [Color(0xff141414), Color(0xff1e1e1e), Color(0xff282828)]),
       ),
-      body: Text("2323"),
+      body: RepositoryProvider(
+        create: (context) => BusRepository(),
+        child: BlocProvider<BusBloc>(
+          create: (context) => BusBloc(
+            RepositoryProvider.of<BusRepository>(context),
+          )..add(GetBusEvent()),
+          child: BlocBuilder<BusBloc, BusState>(
+            builder: (context, state) {
+              if (state is BusLoadedState) {
+                List<String> typeList = [];
+                curBusType = state.busTypeList[0];
+                for (BusType items in state.busTypeList) {
+                  typeList.add(items.type);
+                }
+                return Column(
+                  children: [
+                    typeList.isNotEmpty
+                        ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 200,
+                          child: DropdownSearch(
+                            selectedItem: typeList.first,
+                            items: typeList,
+                            mode: Mode.MENU,
+                            showSearchBox: false,
+                            showSelectedItems: true,
+                            searchFieldProps: const TextFieldProps(
+                              cursorColor: Colors.blue,
+                            ),
+                            onChanged: (String? value) {
+                              curBusType = state.busTypeList[typeList.indexOf(value!)];
+                            },
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          child: TextField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Введите номер автобуса',
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              BlocProvider.of<BusBloc>(context)
+                                  .add(AddBusEvent(curBusType.type, nameController.text));
+                              nameController.clear();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.orange,
+                            ),
+                            child: Text("Добавить")
+                        ),
+                      ],
+                    )
+                    : Text("Необходимо добавить типы автобусов"),
+                    Divider(),
+                    ListView.builder(
+                        itemCount: state.busList.length,
+                        shrinkWrap: true,
+                        padding: EdgeInsets.all(10),
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            title: Text(state.busList[index].number),
+                            subtitle: Text(state.busList[index].busType),
+                          );
+                        }
+                    ),
+
+
+                  ],
+                );
+              }
+              return Container();
+            },
+          ),
+        ),
+      ),
     );
   }
 }
