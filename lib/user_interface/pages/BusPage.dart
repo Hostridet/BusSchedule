@@ -82,7 +82,7 @@ class _BusPageState extends State<BusPage> {
                   children: [
                     typeList.isNotEmpty
                         ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Container(
                           width: 200,
@@ -130,9 +130,20 @@ class _BusPageState extends State<BusPage> {
                         shrinkWrap: true,
                         padding: EdgeInsets.all(10),
                         itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text(state.busList[index].number),
-                            subtitle: Text(state.busList[index].busType),
+                          return Card(
+                            elevation: 1,
+                            child: ListTile(
+                              leading: Icon(Icons.bus_alert),
+                              title: Text(state.busList[index].number),
+                              subtitle: Text(state.busList[index].busType),
+                              trailing: IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: () {
+                                  BlocProvider.of<BusBloc>(context)
+                                      .add(DeleteBusEvent(state.busList[index]));
+                                },
+                              ),
+                            ),
                           );
                         }
                     ),

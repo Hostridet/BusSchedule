@@ -12,3 +12,9 @@ class BusTypeAddEvent extends BusTypeEvent {
 
   BusTypeAddEvent(this.id, this.type, this.range);
 }
+
+class  BusTypeDeleteEvent extends BusTypeEvent {
+  final BusType busType;
+
+  BusTypeDeleteEvent(this.busType);
+}

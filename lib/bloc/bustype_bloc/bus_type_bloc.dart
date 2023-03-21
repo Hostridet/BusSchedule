@@ -23,8 +23,12 @@ class BusTypeBloc extends Bloc<BusTypeEvent, BusTypeState> {
       }
     });
     on<BusTypeAddEvent>((event, emit) async {
-      BusType type = BusType(id: event.id, type: event.type, range: event.range);
+      BusType type = BusType(id: await _busTypeRepository.getCount(), type: event.type, range: event.range);
       type.save();
+      add(BusTypeGetEvent());
+    });
+    on<BusTypeDeleteEvent>((event, emit) async {
+      event.busType.delete();
       add(BusTypeGetEvent());
     });
   }

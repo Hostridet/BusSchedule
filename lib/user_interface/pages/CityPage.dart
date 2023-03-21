@@ -74,15 +74,15 @@ class _CityPageState extends State<CityPage> {
                   return Column(
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
-                            height: 200,
                             width: 200,
                             child: TextField(
                               controller: nameController,
                               decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  labelText: 'Введите название города',
+                                border: InputBorder.none,
+                                labelText: 'Введите название города',
                               ),
                             ),
                           ),
@@ -92,10 +92,14 @@ class _CityPageState extends State<CityPage> {
                                     .add(AddCityEvent(state.cityList.length, nameController.text));
                                 nameController.clear();
                               },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.orange,
+                              ),
                               child: Text("Добавить")
                           ),
                         ],
                       ),
+                      Divider(),
                       Center(child: Text("Список городов пуст")),
                     ],
                   );
@@ -138,6 +142,7 @@ class _CityPageState extends State<CityPage> {
                             return Card(
                               elevation: 1,
                               child: ListTile(
+                                leading: Icon(Icons.location_city),
                                 title: Text(state.cityList[index].name),
                                 trailing: IconButton(
                                   icon: Icon(Icons.delete),
