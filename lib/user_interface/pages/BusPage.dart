@@ -87,6 +87,7 @@ class _BusPageState extends State<BusPage> {
                         Container(
                           width: 200,
                           child: DropdownSearch(
+                            dropdownSearchDecoration: InputDecoration(labelText: "Тип автобуса"),
                             selectedItem: typeList.first,
                             items: typeList,
                             mode: Mode.MENU,
