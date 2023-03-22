@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:front/user_interface/pages/BusTypePage.dart';
 import 'package:front/user_interface/pages/CityPage.dart';
+import 'package:front/user_interface/pages/RoadPage.dart';
 
 import '../pages/BusPage.dart';
+import '../pages/SchedulePage.dart';
 
 
 class RouteGenerator {
@@ -10,6 +12,11 @@ class RouteGenerator {
     final args = settings.arguments;
 
     switch(settings.name) {
+      case '/schedule':
+        return CustomPageRoute(
+          builder: (context) => const SchedulePage(),
+          settings: settings,
+        );
       case '/bustype':
         return CustomPageRoute(
           builder: (context) => const BusTypePage(),
@@ -23,6 +30,11 @@ class RouteGenerator {
       case '/bus':
         return CustomPageRoute(
           builder: (context) => const BusPage(),
+          settings: settings,
+        );
+      case '/road':
+        return CustomPageRoute(
+          builder: (context) => const RoadPage(),
           settings: settings,
         );
       default:

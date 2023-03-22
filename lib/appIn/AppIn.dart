@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: "/bustype",
+      initialRoute: "/schedule",
       // routes: {
       //   '/students': (context) => StudentPage(),
       //   '/subject': (context) => SubjectPage(),

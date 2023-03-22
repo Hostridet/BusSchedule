@@ -1,25 +1,25 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../bloc/bus_bloc/bus_bloc.dart';
-import '../../models/BusType.dart';
-import '../../repository/BusRepository.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class BusPage extends StatefulWidget {
-  const BusPage({Key? key}) : super(key: key);
+import '../../bloc/road_bloc/road_bloc.dart';
+import '../../models/City.dart';
+import '../../repository/RoadRepository.dart';
+
+class RoadPage extends StatefulWidget {
+  const RoadPage({Key? key}) : super(key: key);
 
   @override
-  State<BusPage> createState() => _BusPageState();
+  State<RoadPage> createState() => _RoadPageState();
 }
 
-class _BusPageState extends State<BusPage> {
-  TextEditingController nameController = TextEditingController();
+class _RoadPageState extends State<RoadPage> {
   @override
   Widget build(BuildContext context) {
-    late BusType curBusType;
+    late City curStartCity;
+    late City curEndCity;
     return Scaffold(
       appBar: NewGradientAppBar(
         automaticallyImplyLeading: false,
@@ -47,7 +47,7 @@ class _BusPageState extends State<BusPage> {
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(context, "/bus", ModalRoute.withName('/'));
               },
-              child: Text("Автобусы", style: TextStyle(color: Colors.white70)),
+              child: Text("Автобусы", style: TextStyle(color: Colors.white)),
             ),
             SizedBox(width: 10),
             TextButton(
@@ -61,40 +61,41 @@ class _BusPageState extends State<BusPage> {
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(context, "/road", ModalRoute.withName('/'));
               },
-              child: Text("Дороги", style: TextStyle(color: Colors.white)),
+              child: Text("Дороги", style: TextStyle(color: Colors.white70)),
             ),
           ],
         ),
         gradient: const LinearGradient(colors: [Color(0xff141414), Color(0xff1e1e1e), Color(0xff282828)]),
       ),
       body: RepositoryProvider(
-        create: (context) => BusRepository(),
-        child: BlocProvider<BusBloc>(
-          create: (context) => BusBloc(
-            RepositoryProvider.of<BusRepository>(context),
-          )..add(GetBusEvent()),
-          child: BlocBuilder<BusBloc, BusState>(
+        create: (context) => RoadRepository(),
+        child: BlocProvider<RoadBloc>(
+          create: (context) => RoadBloc(
+            RepositoryProvider.of<RoadRepository>(context),
+          )..add(GetRoadEvent()),
+          child: BlocBuilder<RoadBloc, RoadState>(
             builder: (context, state) {
-              if (state is BusLoadedState) {
-                List<String> typeList = [];
-                if (state.busTypeList.isNotEmpty) {
-                  curBusType = state.busTypeList[0];
+              if (state is RoadLoadedState) {
+                List<String> cityList = [];
+                if (state.cityList.isNotEmpty) {
+                  curStartCity = state.cityList[0];
+                  curEndCity = state.cityList[0];
                 }
-                for (BusType items in state.busTypeList) {
-                  typeList.add(items.type);
+                for (City items in state.cityList) {
+                  cityList.add(items.name);
                 }
                 return Column(
                   children: [
-                    typeList.isNotEmpty
-                        ? Row(
+                    cityList.isNotEmpty
+                      ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Container(
                           width: 200,
                           child: DropdownSearch(
-                            dropdownSearchDecoration: InputDecoration(labelText: "Тип автобуса"),
-                            selectedItem: typeList.first,
-                            items: typeList,
+                            dropdownSearchDecoration: InputDecoration(labelText: "Пункт отправления"),
+                            selectedItem: cityList.first,
+                            items: cityList,
                             mode: Mode.MENU,
                             showSearchBox: false,
                             showSelectedItems: true,
@@ -102,25 +103,33 @@ class _BusPageState extends State<BusPage> {
                               cursorColor: Colors.blue,
                             ),
                             onChanged: (String? value) {
-                              curBusType = state.busTypeList[typeList.indexOf(value!)];
+                              curStartCity = state.cityList[cityList.indexOf(value!)];
                             },
                           ),
                         ),
                         Container(
                           width: 200,
-                          child: TextField(
-                            controller: nameController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              labelText: 'Введите номер автобуса',
+                          child: DropdownSearch(
+                            dropdownSearchDecoration: InputDecoration(labelText: "Пункт прибытия"),
+                            selectedItem: cityList.first,
+                            items: cityList,
+                            mode: Mode.MENU,
+                            showSearchBox: false,
+                            showSelectedItems: true,
+                            searchFieldProps: const TextFieldProps(
+                              cursorColor: Colors.blue,
                             ),
+                            onChanged: (String? value) {
+                              curEndCity = state.cityList[cityList.indexOf(value!)];
+                            },
                           ),
                         ),
                         ElevatedButton(
                             onPressed: () {
-                              BlocProvider.of<BusBloc>(context)
-                                  .add(AddBusEvent(curBusType.type, nameController.text));
-                              nameController.clear();
+                              if (curStartCity.name != curEndCity.name) {
+                                BlocProvider.of<RoadBloc>(context)
+                                    .add(AddRoadEvent(curStartCity.name, curEndCity.name));
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.orange,
@@ -129,37 +138,45 @@ class _BusPageState extends State<BusPage> {
                         ),
                       ],
                     )
-                    : Text("Необходимо добавить типы автобусов"),
+                        : Text("Необходимо добавить города"),
                     Divider(),
                     ListView.builder(
-                        itemCount: state.busList.length,
+                        itemCount: state.roadList.length,
                         shrinkWrap: true,
                         padding: EdgeInsets.all(10),
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 1,
                             child: ListTile(
-                              leading: Icon(Icons.bus_alert),
-                              title: Text(state.busList[index].busType),
-                              subtitle: Text(state.busList[index].number),
+                              title: Row(
+                                children: [
+                                  Text(state.roadList[index].startCity),
+                                  SizedBox(width: 10),
+                                  Text("->"),
+                                  SizedBox(width: 10),
+                                  Text(state.roadList[index].endCity),
+                                ],
+                              ),
+                              leading: Icon(Icons.add_road),
                               trailing: IconButton(
                                 icon: Icon(Icons.delete),
                                 onPressed: () {
-                                  BlocProvider.of<BusBloc>(context)
-                                      .add(DeleteBusEvent(state.busList[index]));
+                                  BlocProvider.of<RoadBloc>(context)
+                                      .add(DeleteRoadEvent(state.roadList[index]));
                                 },
                               ),
                             ),
                           );
                         }
                     ),
-
-
                   ],
                 );
               }
+              if (state is RoadErrorState) {
+                return Center(child: Text(state.error));
+              }
               return Container();
-            },
+            }
           ),
         ),
       ),
