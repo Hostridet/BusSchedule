@@ -1,3 +1,4 @@
+import 'package:front/user_interface/components/ErrorDialog.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -129,6 +130,9 @@ class _RoadPageState extends State<RoadPage> {
                               if (curStartCity.name != curEndCity.name) {
                                 BlocProvider.of<RoadBloc>(context)
                                     .add(AddRoadEvent(curStartCity.name, curEndCity.name));
+                              }
+                              else {
+                                ErrorDialog.showAlertDialog(context, "Пункт отправления должен отличаться от пункта прибытия");
                               }
                             },
                             style: ElevatedButton.styleFrom(

@@ -181,14 +181,14 @@ class _BusTypePageState extends State<BusTypePage> {
                           ),
                           ElevatedButton(
                               onPressed: () {
-                                if (nameController.text.isNotEmpty && rangeController.text.isNotEmpty) {
+                                if (nameController.text.isEmpty || rangeController.text.isEmpty) {
+                                  ErrorDialog.showAlertDialog(context, "Все поля должны быть заполнены");
+                                }
+                                else {
                                   BlocProvider.of<BusTypeBloc>(context)
                                       .add(BusTypeAddEvent(state.listBusType.length, nameController.text, int.parse(rangeController.text)));
                                   nameController.clear();
                                   rangeController.clear();
-                                }
-                                else {
-                                  ErrorDialog.showAlertDialog(context, "Все поля должны быть заполнены");
                                 }
                               },
                               style: ElevatedButton.styleFrom(

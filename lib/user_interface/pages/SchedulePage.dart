@@ -1,3 +1,4 @@
+import 'package:front/user_interface/components/ErrorDialog.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -144,9 +145,14 @@ class _SchedulePageState extends State<SchedulePage> {
                             ),
                             ElevatedButton(
                                 onPressed: () {
-                                  BlocProvider.of<ScheduleBloc>(context)
-                                      .add(AddScheduleEvent(curBus.busType, "${curRoad.startCity} -> ${curRoad.endCity}", int.parse(costController.text), "", ""));
-                                  costController.clear();
+                                  if (costController.text.isNotEmpty) {
+                                    BlocProvider.of<ScheduleBloc>(context)
+                                        .add(AddScheduleEvent(curBus.busType, "${curRoad.startCity} -> ${curRoad.endCity}", int.parse(costController.text), "", ""));
+                                    costController.clear();
+                                  }
+                                 else {
+                                   ErrorDialog.showAlertDialog(context, "Все поля должны быть заполнены");
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.orange,

@@ -1,4 +1,5 @@
 import 'package:front/bloc/city_bloc/city_bloc.dart';
+import 'package:front/user_interface/components/ErrorDialog.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -91,9 +92,14 @@ class _CityPageState extends State<CityPage> {
                           ),
                           ElevatedButton(
                               onPressed: () {
-                                BlocProvider.of<CityBloc>(context)
-                                    .add(AddCityEvent(state.cityList.length, nameController.text));
-                                nameController.clear();
+                                if (nameController.text.isNotEmpty) {
+                                  BlocProvider.of<CityBloc>(context)
+                                      .add(AddCityEvent(state.cityList.length, nameController.text));
+                                  nameController.clear();
+                                }
+                                else {
+                                  ErrorDialog.showAlertDialog(context, "Все поля должны быть заполнены");
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.orange,
