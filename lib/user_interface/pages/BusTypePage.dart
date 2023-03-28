@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:front/bloc/bustype_bloc/bus_type_bloc.dart';
 import 'package:front/repository/BusTypeRepository.dart';
+import 'package:front/user_interface/components/ErrorDialog.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -106,10 +107,16 @@ class _BusTypePageState extends State<BusTypePage> {
                             ),
                             ElevatedButton(
                                 onPressed: () {
-                                  BlocProvider.of<BusTypeBloc>(context)
-                                      .add(BusTypeAddEvent(state.listBusType.length, nameController.text, int.parse(rangeController.text)));
-                                  nameController.clear();
-                                  rangeController.clear();
+                                  if (nameController.text.isNotEmpty && rangeController.text.isNotEmpty) {
+                                    BlocProvider.of<BusTypeBloc>(context)
+                                        .add(BusTypeAddEvent(state.listBusType.length, nameController.text, int.parse(rangeController.text)));
+                                    nameController.clear();
+                                    rangeController.clear();
+                                  }
+                                  else {
+                                    ErrorDialog.showAlertDialog(context, "Все поля должны быть заполнены");
+                                  }
+
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.orange,
@@ -174,10 +181,15 @@ class _BusTypePageState extends State<BusTypePage> {
                           ),
                           ElevatedButton(
                               onPressed: () {
-                                BlocProvider.of<BusTypeBloc>(context)
-                                    .add(BusTypeAddEvent(state.listBusType.length, nameController.text, int.parse(rangeController.text)));
-                                nameController.clear();
-                                rangeController.clear();
+                                if (nameController.text.isNotEmpty && rangeController.text.isNotEmpty) {
+                                  BlocProvider.of<BusTypeBloc>(context)
+                                      .add(BusTypeAddEvent(state.listBusType.length, nameController.text, int.parse(rangeController.text)));
+                                  nameController.clear();
+                                  rangeController.clear();
+                                }
+                                else {
+                                  ErrorDialog.showAlertDialog(context, "Все поля должны быть заполнены");
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.orange,
