@@ -124,7 +124,7 @@ class _CityPageState extends State<CityPage> {
                             child: TextField(
                               controller: nameController,
                               decoration: InputDecoration(
-                                border: InputBorder.none,
+                                border: UnderlineInputBorder(),
                                 labelText: 'Введите название города',
                               ),
                             ),

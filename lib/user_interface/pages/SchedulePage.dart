@@ -8,6 +8,7 @@ import '../../bloc/schedule_bloc/schedule_bloc.dart';
 import '../../models/Bus.dart';
 import '../../models/Road.dart';
 import '../../repository/ScheduleRepository.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({Key? key}) : super(key: key);
@@ -18,6 +19,9 @@ class SchedulePage extends StatefulWidget {
 
 class _SchedulePageState extends State<SchedulePage> {
   TextEditingController costController = TextEditingController();
+  TimeOfDay startTime = TimeOfDay.now();
+  TimeOfDay endTime = TimeOfDay.now();
+  DateTime dateTime = DateTime.now();
   @override
   Widget build(BuildContext context) {
     late Bus curBus;
@@ -115,7 +119,7 @@ class _SchedulePageState extends State<SchedulePage> {
                               ),
                             ),
                             Container(
-                              width: 200,
+                              width: 300,
                               child: DropdownSearch(
                                 dropdownSearchDecoration: InputDecoration(labelText: "Дорога"),
                                 selectedItem: roadList.first,
@@ -143,6 +147,58 @@ class _SchedulePageState extends State<SchedulePage> {
                                 ),
                               ),
                             ),
+                            SizedBox(
+                              width: 200,
+                              child: ListTile(
+                                title: Text("${dateTime.day}/${dateTime.month}/${dateTime.year}"),
+                                subtitle: Text("Дата отправления"),
+                                onTap: () async {
+                                  DateTime? newDate = await showDatePicker(
+                                    locale: const Locale("ru",""),
+                                    context: context,
+                                    initialDate: dateTime,
+                                    firstDate: DateTime(1900),
+                                    lastDate: DateTime(2100),
+                                  );
+                                  setState(() {
+                                    dateTime = newDate!;
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 200,
+                              child: ListTile(
+                                title: Text("${startTime.hour}:${startTime.minute}"),
+                                subtitle: Text("Время отправления"),
+                                onTap: () async {
+                                  TimeOfDay? newTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: startTime,
+                                  );
+                                  setState(() {
+                                    startTime = newTime!;
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 200,
+                              child: ListTile(
+                                title: Text("${endTime.hour}:${endTime.minute}"),
+                                subtitle: Text("Время прибытия"),
+                                onTap: () async {
+                                  TimeOfDay? newTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: endTime,
+                                  );
+                                  setState(() {
+                                    endTime = newTime!;
+                                  });
+                                },
+                              ),
+                            ),
+
                             ElevatedButton(
                                 onPressed: () {
                                   if (costController.text.isNotEmpty) {
