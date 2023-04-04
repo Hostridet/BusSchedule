@@ -12,7 +12,9 @@ class Bus {
   void save() async {
     final prefs = await SharedPreferences.getInstance();
     String savedString = "${id.toString()}/$number/$busType";
-    await prefs.setString('bus + ${id.toString()}', savedString);
+    if (!await findSameValue(busType)) {
+      await prefs.setString('bus + ${id.toString()}', savedString);
+    }
   }
   void delete() async {
     final prefs = await SharedPreferences.getInstance();
@@ -31,5 +33,24 @@ class Bus {
       number: valueList[1],
       busType: valueList[2],
     ));
+  }
+  Future<bool> findSameValue(String number) async  {
+    bool flag = false;
+    int index = 0;
+    while (flag != true) {
+      Bus curBus = await Bus.getById(index);
+      if (curBus.number == "null") {
+        flag = true;
+      }
+      else {
+        if (curBus.id != -1) {
+          if (curBus.busType == number) {
+            return true;
+          }
+        }
+        index++;
+      }
+    }
+    return false;
   }
 }

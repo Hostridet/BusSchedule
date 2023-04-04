@@ -14,7 +14,9 @@ class BusType {
   void save() async {
     final prefs = await SharedPreferences.getInstance();
     String savedString = "${id.toString()}/$type/$range";
-    await prefs.setString('busType + ${id.toString()}', savedString);
+    if (!await findSameValue(type)) {
+      await prefs.setString('busType + ${id.toString()}', savedString);
+    }
   }
 
   void delete() async {
@@ -35,5 +37,24 @@ class BusType {
       type: valueList[1],
       range: int.parse(valueList[2]),
     ));
+  }
+  Future<bool> findSameValue(String name) async {
+    bool flag = false;
+    int index = 0;
+    while (flag != true) {
+      BusType curBus = await BusType.getSoilById(index);
+      if (curBus.type == "null") {
+        flag = true;
+      }
+      else {
+        if (curBus.id != -1) {
+          if (curBus.type == name) {
+            return true;
+          }
+        }
+        index++;
+      }
+    }
+    return false;
   }
 }

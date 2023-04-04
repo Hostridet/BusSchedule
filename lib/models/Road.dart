@@ -12,7 +12,10 @@ class Road {
   void save() async {
     final prefs = await SharedPreferences.getInstance();
     String savedString = "${id.toString()}/$startCity/$endCity";
-    await prefs.setString('road + ${id.toString()}', savedString);
+    if (!await findSameValue(startCity, endCity)) {
+      await prefs.setString('road + ${id.toString()}', savedString);
+
+    }
   }
   void delete() async {
     final prefs = await SharedPreferences.getInstance();
@@ -31,5 +34,24 @@ class Road {
       startCity: valueList[1],
       endCity: valueList[2],
     ));
+  }
+  Future<bool> findSameValue(String start, String end) async {
+    bool flag = false;
+    int index = 0;
+    while (flag != true) {
+      Road curRoad = await Road.getById(index);
+      if (curRoad.startCity == "null") {
+        flag = true;
+      }
+      else {
+        if (curRoad.id != -1) {
+          if (curRoad.startCity == start && curRoad.endCity == end) {
+            return true;
+          }
+        }
+        index++;
+      }
+    }
+    return false;
   }
 }

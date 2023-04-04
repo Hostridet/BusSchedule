@@ -11,7 +11,9 @@ class City {
   void safe() async {
     final prefs = await SharedPreferences.getInstance();
     String savedString = "${id.toString()}/$name";
-    await prefs.setString('city + ${id.toString()}', savedString);
+    if (!await findSameValue(name)) {
+      await prefs.setString('city + ${id.toString()}', savedString);
+    }
   }
 
   void delete() async {
@@ -31,5 +33,24 @@ class City {
       id: int.parse(valueList[0]),
       name: valueList[1],
     ));
+  }
+  Future<bool> findSameValue(String name) async {
+    bool flag = false;
+    int index = 0;
+    while (flag != true) {
+      City curCity = await City.getSoilById(index);
+      if (curCity.name == "null") {
+        flag = true;
+      }
+      else {
+        if (curCity.id != -1) {
+          if (curCity.name == name) {
+            return true;
+          }
+        }
+        index++;
+      }
+    }
+    return false;
   }
 }
