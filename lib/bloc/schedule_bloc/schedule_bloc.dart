@@ -34,7 +34,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
     on<AddScheduleEvent>((event, emit) async {
       Schedule schedule = Schedule(id: await _scheduleRepository.getCount(), bus: event.bus, road: event.road,
-          cost: event.cost, startTime: event.startTime, endTime: event.endTime);
+          cost: event.cost, date: event.date, startTime: event.startTime, endTime: event.endTime);
       schedule.save();
       add(GetScheduleEvent());
     });

@@ -202,8 +202,11 @@ class _SchedulePageState extends State<SchedulePage> {
                             ElevatedButton(
                                 onPressed: () {
                                   if (costController.text.isNotEmpty) {
+                                    print("${startTime.hour}:${startTime.minute}");
                                     BlocProvider.of<ScheduleBloc>(context)
-                                        .add(AddScheduleEvent(curBus.busType, "${curRoad.startCity} -> ${curRoad.endCity}", int.parse(costController.text), "", ""));
+                                        .add(AddScheduleEvent(curBus.busType, "${curRoad.startCity} - ${curRoad.endCity}",
+                                        int.parse(costController.text),"${dateTime.day}.${dateTime.month}.${dateTime.year}" ,
+                                        "${startTime.hour}:${startTime.minute}", "${endTime.hour}:${endTime.minute}"));
                                     costController.clear();
                                   }
                                  else {
@@ -229,32 +232,58 @@ class _SchedulePageState extends State<SchedulePage> {
                                   title: Column(
                                     children: [
                                       Align(
-                                          child: Text("Направление: ${state.scheduleList[index].road}"),
-                                          alignment: Alignment.topLeft,
+                                          child: Text("${state.scheduleList[index].date}", style: TextStyle(fontWeight: FontWeight.bold)),
+                                        alignment: Alignment.centerLeft,
                                       ),
-                                      Align(
-                                          child: Text("Номер автобуса: ${state.scheduleList[index].bus}"),
-                                          alignment: Alignment.topLeft,
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(state.scheduleList[index].road),
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Text("${state.scheduleList[index].cost}₽", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                                          ),
+                                        ],
                                       ),
                                       Divider(),
                                     ],
                                   ),
-                                  subtitle: Column(
-                                    children: [
-                                      Align(
-                                          child: Text("Время отправления: ${state.scheduleList[index].startTime}"),
-                                          alignment:  Alignment.topLeft,
-                                      ),
-                                      Align(
-                                          child: Text("Время прибытия: ${state.scheduleList[index].endTime}"),
-                                          alignment: Alignment.topLeft,
-                                      ),
-                                    ],
-                                  ),
+                                  subtitle: Text("${state.scheduleList[index].startTime} - ${state.scheduleList[index].endTime}"),
                                 ),
                               );
                             }
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(15.0),
+                        //   child: Table(
+                        //     children: [
+                        //       TableRow(
+                        //         children: [
+                        //           Text("№ автобуса", style: TextStyle(fontWeight: FontWeight.bold),),
+                        //           Text("Маршрут", style: TextStyle(fontWeight: FontWeight.bold)),
+                        //           Text("Дата отправления", style: TextStyle(fontWeight: FontWeight.bold)),
+                        //           Text("Время отправления", style: TextStyle(fontWeight: FontWeight.bold)),
+                        //           Text("Время прибытия", style: TextStyle(fontWeight: FontWeight.bold)),
+                        //           Text("Cтоимость", style: TextStyle(fontWeight: FontWeight.bold)),
+                        //
+                        //         ],
+                        //       ),
+                        //       ...state.scheduleList.asMap().entries.map((schedule) {
+                        //         print(schedule.value.date);
+                        //         return TableRow(
+                        //           children: [
+                        //             Text(schedule.value.bus),
+                        //             Text(schedule.value.road),
+                        //             Text(schedule.value.date),
+                        //             Text(schedule.value.startTime),
+                        //             Text(schedule.value.endTime),
+                        //             Text(schedule.value.cost.toString()),
+                        //           ],
+                        //         );
+                        //       })
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     );
                   }
