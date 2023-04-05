@@ -1,3 +1,4 @@
+import 'package:front/models/Schedule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Bus {
@@ -20,6 +21,7 @@ class Bus {
     final prefs = await SharedPreferences.getInstance();
     String savedString = "-1/$number/$busType";
     await prefs.setString('bus + ${id.toString()}', savedString);
+    Schedule.deleteConnectedByBus(busType);
   }
   static Future<void> deleteConnectedBus(String busType) async {
     int index = 0;

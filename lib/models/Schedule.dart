@@ -22,6 +22,44 @@ class Schedule {
     String savedString = "${id.toString()}/$bus/$road/${cost.toString()}/$date/$startTime/$endTime";
     await prefs.setString('schedule + ${id.toString()}', savedString);
   }
+  static Future<void> deleteConnectedByRoads(String road) async {
+    int index = 0;
+    bool flag = false;
+    List<String> list = road.split(" ");
+
+    while (flag != true) {
+      Schedule curSchedule = await Schedule.getById(index);
+      if (curSchedule.bus == "null") {
+        flag = true;
+      }
+      else {
+        if (curSchedule.id != -1) {
+          if (curSchedule.road == road) {
+            curSchedule.delete();
+          }
+        }
+        index++;
+      }
+    }
+  }
+  static Future<void> deleteConnectedByBus(String number) async {
+    int index = 0;
+    bool flag = false;
+    while (flag != true) {
+      Schedule curSchedule = await Schedule.getById(index);
+      if (curSchedule.bus == "null") {
+        flag = true;
+      }
+      else {
+        if (curSchedule.id != -1) {
+          if (curSchedule.bus == number) {
+            curSchedule.delete();
+          }
+        }
+        index++;
+      }
+    }
+  }
   void delete() async {
     final prefs = await SharedPreferences.getInstance();
     String savedString = "-1/$bus/$road/${cost.toString()}/$date/$startTime/$endTime";

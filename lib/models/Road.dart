@@ -1,3 +1,4 @@
+import 'package:front/models/Schedule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Road {
@@ -14,8 +15,8 @@ class Road {
     String savedString = "${id.toString()}/$startCity/$endCity";
     if (!await findSameValue(startCity, endCity)) {
       await prefs.setString('road + ${id.toString()}', savedString);
-
     }
+    Schedule.deleteConnectedByRoads("${startCity} - ${endCity}");
   }
   void delete() async {
     final prefs = await SharedPreferences.getInstance();
