@@ -1,3 +1,4 @@
+import 'package:front/models/Road.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class City {
@@ -20,6 +21,7 @@ class City {
     final prefs = await SharedPreferences.getInstance();
     String savedString = "-1/$name";
     await prefs.setString('city + ${id.toString()}', savedString);
+    Road.deleteConnectedRoad(name);
   }
 
   static Future<City> getSoilById(int id) async {

@@ -21,6 +21,24 @@ class Bus {
     String savedString = "-1/$number/$busType";
     await prefs.setString('bus + ${id.toString()}', savedString);
   }
+  static Future<void> deleteConnectedBus(String busType) async {
+    int index = 0;
+    bool flag = false;
+    while (flag != true) {
+      Bus curBus = await Bus.getById(index);
+      if (curBus.number == "null") {
+        flag = true;
+      }
+      else {
+        if (curBus.id != -1) {
+          if (curBus.number == busType) {
+            curBus.delete();
+          }
+        }
+        index++;
+      }
+    }
+  }
   static Future<Bus> getById(int id) async {
     final prefs = await SharedPreferences.getInstance();
     String? value;

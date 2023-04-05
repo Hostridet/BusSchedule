@@ -1,3 +1,4 @@
+import 'package:front/models/Bus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -23,6 +24,7 @@ class BusType {
     final prefs = await SharedPreferences.getInstance();
     String savedString = "-1/$type/$range";
     await prefs.setString('busType + ${id.toString()}', savedString);
+    Bus.deleteConnectedBus(type);
   }
 
   static Future<BusType> getSoilById(int id) async {

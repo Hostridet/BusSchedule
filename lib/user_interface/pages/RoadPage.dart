@@ -156,7 +156,7 @@ class _RoadPageState extends State<RoadPage> {
                                 children: [
                                   Text(state.roadList[index].startCity),
                                   SizedBox(width: 10),
-                                  Text("->"),
+                                  Text("-"),
                                   SizedBox(width: 10),
                                   Text(state.roadList[index].endCity),
                                 ],

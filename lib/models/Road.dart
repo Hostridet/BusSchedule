@@ -22,6 +22,25 @@ class Road {
     String savedString = "-1/$startCity/$endCity";
     await prefs.setString('road + ${id.toString()}', savedString);
   }
+  static Future<void> deleteConnectedRoad(String city) async {
+    int index = 0;
+    bool flag = false;
+    while (flag != true) {
+      Road curRoad = await Road.getById(index);
+      if (curRoad.startCity == "null") {
+        flag = true;
+      }
+      else {
+        if (curRoad.id != -1) {
+          if (curRoad.startCity == city || curRoad.endCity == city) {
+            curRoad.delete();
+          }
+        }
+        index++;
+      }
+    }
+
+  }
   static Future<Road> getById(int id) async {
     final prefs = await SharedPreferences.getInstance();
     String? value;
